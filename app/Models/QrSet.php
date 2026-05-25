@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
 
 class QrSet extends Model
 {
     public const POINT_TYPES = [
         'CHECKIN',
+        'PATROL_1',
+        'STANDBY_1',
+        'PATROL_2',
+        'STANDBY_2',
         'CHECKOUT',
-        'PATROL_A',
-        'PATROL_B',
-        'PATROL_C',
     ];
 
     protected $fillable = [

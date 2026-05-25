@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceLogManagementController;
+use App\Http\Controllers\AttendanceReportController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardPasswordController;
 use App\Http\Controllers\QrSetManagementController;
 use App\Http\Controllers\ScheduleManagementController;
 use App\Http\Controllers\UserManagementController;
@@ -27,6 +30,9 @@ Route::middleware('guest')->group(function (): void {
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::put('/dashboard/password', [DashboardPasswordController::class, 'update'])
+        ->middleware('throttle:6,1')
+        ->name('dashboard.password.update');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::middleware([EnsureSatpam::class, 'throttle:20,1'])->group(function (): void {
@@ -39,6 +45,14 @@ Route::middleware('auth')->group(function (): void {
             ->except(['destroy']);
 
         Route::resource('schedules', ScheduleManagementController::class);
+
+        Route::get('rekap-cetak', [AttendanceReportController::class, 'index'])
+            ->name('attendance-reports.index');
+        Route::get('rekap-cetak/download', [AttendanceReportController::class, 'download'])
+            ->name('attendance-reports.download');
+
+        Route::resource('attendance-logs', AttendanceLogManagementController::class)
+            ->only(['index', 'edit', 'update']);
 
         Route::get('settings', [AppSettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [AppSettingController::class, 'update'])->name('settings.update');

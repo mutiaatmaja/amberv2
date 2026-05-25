@@ -17,7 +17,9 @@ class UpdateAppSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'early_tolerance_minutes' => ['required', 'integer', 'min:0', 'max:180'],
             'late_tolerance_minutes' => ['required', 'integer', 'min:0', 'max:180'],
+            'auto_checkout_grace_minutes' => ['required', 'integer', 'min:0', 'max:240'],
             'require_gps' => ['required', 'boolean'],
             'show_map' => ['required', 'boolean'],
         ];

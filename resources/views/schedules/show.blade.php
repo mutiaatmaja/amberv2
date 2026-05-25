@@ -30,18 +30,27 @@
                     </dd>
                 </div>
                 <div>
-                    <dt class="font-semibold text-slate-500">Patroli A</dt>
-                    <dd class="mt-1">{{ \Illuminate\Support\Carbon::parse($schedule->patrol_a_time)->format('H:i') }}
+                    <dt class="font-semibold text-slate-500">Patroli 1</dt>
+                    <dd class="mt-1">
+                        {{ \Illuminate\Support\Carbon::parse($schedule->patrol_1_time)->format('H:i') }}
                     </dd>
                 </div>
                 <div>
-                    <dt class="font-semibold text-slate-500">Patroli B</dt>
-                    <dd class="mt-1">{{ \Illuminate\Support\Carbon::parse($schedule->patrol_b_time)->format('H:i') }}
+                    <dt class="font-semibold text-slate-500">Standby 1</dt>
+                    <dd class="mt-1">
+                        {{ \Illuminate\Support\Carbon::parse($schedule->standby_1_time)->format('H:i') }}
                     </dd>
                 </div>
                 <div>
-                    <dt class="font-semibold text-slate-500">Patroli C</dt>
-                    <dd class="mt-1">{{ \Illuminate\Support\Carbon::parse($schedule->patrol_c_time)->format('H:i') }}
+                    <dt class="font-semibold text-slate-500">Patroli 2</dt>
+                    <dd class="mt-1">
+                        {{ \Illuminate\Support\Carbon::parse($schedule->patrol_2_time)->format('H:i') }}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="font-semibold text-slate-500">Standby 2</dt>
+                    <dd class="mt-1">
+                        {{ \Illuminate\Support\Carbon::parse($schedule->standby_2_time)->format('H:i') }}
                     </dd>
                 </div>
                 <div>

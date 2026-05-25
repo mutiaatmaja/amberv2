@@ -33,7 +33,12 @@ class ScheduleManagementController extends Controller
 
     public function store(StoreScheduleRequest $request): RedirectResponse
     {
-        Schedule::query()->create($request->validated());
+        $data = $request->validated();
+        $data['patrol_a_time'] = $data['patrol_1_time'];
+        $data['patrol_b_time'] = $data['standby_1_time'];
+        $data['patrol_c_time'] = $data['patrol_2_time'];
+
+        Schedule::query()->create($data);
 
         return redirect()
             ->route('schedules.index')
@@ -63,7 +68,12 @@ class ScheduleManagementController extends Controller
 
     public function update(UpdateScheduleRequest $request, Schedule $schedule): RedirectResponse
     {
-        $schedule->update($request->validated());
+        $data = $request->validated();
+        $data['patrol_a_time'] = $data['patrol_1_time'];
+        $data['patrol_b_time'] = $data['standby_1_time'];
+        $data['patrol_c_time'] = $data['patrol_2_time'];
+
+        $schedule->update($data);
 
         return redirect()
             ->route('schedules.index')

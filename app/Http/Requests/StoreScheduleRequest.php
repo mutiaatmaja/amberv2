@@ -3,9 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreScheduleRequest extends FormRequest
 {
@@ -34,10 +36,63 @@ class StoreScheduleRequest extends FormRequest
                 },
             ],
             'checkin_time' => ['required', 'date_format:H:i'],
-            'checkout_time' => ['required', 'date_format:H:i', 'after:checkin_time'],
-            'patrol_a_time' => ['required', 'date_format:H:i', 'after_or_equal:checkin_time'],
-            'patrol_b_time' => ['required', 'date_format:H:i', 'after:patrol_a_time'],
-            'patrol_c_time' => ['required', 'date_format:H:i', 'after:patrol_b_time'],
+            'patrol_1_time' => ['required', 'date_format:H:i'],
+            'standby_1_time' => ['required', 'date_format:H:i'],
+            'patrol_2_time' => ['required', 'date_format:H:i'],
+            'standby_2_time' => ['required', 'date_format:H:i'],
+            'checkout_time' => ['required', 'date_format:H:i'],
         ];
+    }
+
+    /**
+     * @return array<int, Closure(Validator): void>
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                if ($validator->errors()->isNotEmpty()) {
+                    return;
+                }
+
+                $this->validateScheduleTimeline($validator);
+            },
+        ];
+    }
+
+    private function validateScheduleTimeline(Validator $validator): void
+    {
+        $sequence = [
+            ['field' => 'checkin_time', 'allow_equal' => true],
+            ['field' => 'patrol_1_time', 'allow_equal' => true],
+            ['field' => 'standby_1_time', 'allow_equal' => false],
+            ['field' => 'patrol_2_time', 'allow_equal' => false],
+            ['field' => 'standby_2_time', 'allow_equal' => false],
+            ['field' => 'checkout_time', 'allow_equal' => false],
+        ];
+
+        $previous = null;
+
+        foreach ($sequence as $index => $item) {
+            $value = $this->string($item['field'])->toString();
+
+            if ($value === '') {
+                return;
+            }
+
+            $current = Carbon::createFromFormat('Y-m-d H:i', '2000-01-01 '.$value);
+
+            if ($index === 0) {
+                $previous = $current;
+
+                continue;
+            }
+
+            while ($item['allow_equal'] ? $current->lt($previous) : $current->lte($previous)) {
+                $current->addDay();
+            }
+
+            $previous = $current;
+        }
     }
 }

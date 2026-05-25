@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Throwable;
+
 use function Spatie\LaravelPdf\Support\pdf;
 
 class QrSetManagementController extends Controller
@@ -47,7 +48,7 @@ class QrSetManagementController extends Controller
             ->route('qr-sets.index')
             ->with('toast', [
                 'type' => 'success',
-                'message' => 'Satu set QR berhasil dibuat (5 titik).',
+                'message' => 'Satu set QR berhasil dibuat (8 titik).',
             ]);
     }
 
@@ -138,9 +139,10 @@ class QrSetManagementController extends Controller
         return match ($pointType) {
             'CHECKIN' => 'Checkin',
             'CHECKOUT' => 'Checkout',
-            'PATROL_A' => 'Patroli A',
-            'PATROL_B' => 'Patroli B',
-            'PATROL_C' => 'Patroli C',
+            'PATROL_1' => 'Patroli 1',
+            'STANDBY_1' => 'Standby 1',
+            'PATROL_2' => 'Patroli 2',
+            'STANDBY_2' => 'Standby 2',
             default => $pointType,
         };
     }

@@ -3,8 +3,8 @@
         <section
             class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 class="text-xl font-semibold">Form Ubah Jadwal Satpam</h3>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Perbarui jadwal checkin, checkout, dan patroli
-                A/B/C.</p>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Perbarui jadwal checkin, checkout,
+                patroli 1, standby 1, patroli 2, dan standby 2.</p>
 
             @if ($errors->any())
                 <div
@@ -45,24 +45,34 @@
                             required
                             class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
                     <div>
-                        <label for="patrol_a_time" class="mb-2 block text-sm font-medium">Jam Patroli A</label>
-                        <input id="patrol_a_time" name="patrol_a_time" type="time"
-                            value="{{ old('patrol_a_time', \Illuminate\Support\Carbon::parse($schedule->patrol_a_time)->format('H:i')) }}"
+                        <label for="patrol_1_time" class="mb-2 block text-sm font-medium">Jam Patroli 1</label>
+                        <input id="patrol_1_time" name="patrol_1_time" type="time"
+                            value="{{ old('patrol_1_time', \Illuminate\Support\Carbon::parse($schedule->patrol_1_time)->format('H:i')) }}"
                             required
                             class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label for="patrol_b_time" class="mb-2 block text-sm font-medium">Jam Patroli B</label>
-                        <input id="patrol_b_time" name="patrol_b_time" type="time"
-                            value="{{ old('patrol_b_time', \Illuminate\Support\Carbon::parse($schedule->patrol_b_time)->format('H:i')) }}"
+                        <label for="standby_1_time" class="mb-2 block text-sm font-medium">Jam Standby 1</label>
+                        <input id="standby_1_time" name="standby_1_time" type="time"
+                            value="{{ old('standby_1_time', \Illuminate\Support\Carbon::parse($schedule->standby_1_time)->format('H:i')) }}"
                             required
                             class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
-                    <div class="sm:col-span-2">
-                        <label for="patrol_c_time" class="mb-2 block text-sm font-medium">Jam Patroli C</label>
-                        <input id="patrol_c_time" name="patrol_c_time" type="time"
-                            value="{{ old('patrol_c_time', \Illuminate\Support\Carbon::parse($schedule->patrol_c_time)->format('H:i')) }}"
+                    <div>
+                        <label for="patrol_2_time" class="mb-2 block text-sm font-medium">Jam Patroli 2</label>
+                        <input id="patrol_2_time" name="patrol_2_time" type="time"
+                            value="{{ old('patrol_2_time', \Illuminate\Support\Carbon::parse($schedule->patrol_2_time)->format('H:i')) }}"
+                            required
+                            class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="standby_2_time" class="mb-2 block text-sm font-medium">Jam Standby 2</label>
+                        <input id="standby_2_time" name="standby_2_time" type="time"
+                            value="{{ old('standby_2_time', \Illuminate\Support\Carbon::parse($schedule->standby_2_time)->format('H:i')) }}"
                             required
                             class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>

@@ -41,9 +41,13 @@ class AttendanceScanTest extends TestCase
             'user_id' => $satpam->id,
             'checkin_time' => '08:00',
             'checkout_time' => '17:00',
+            'patrol_1_time' => '09:00',
+            'standby_1_time' => '10:00',
+            'patrol_2_time' => '13:00',
+            'standby_2_time' => '14:00',
             'patrol_a_time' => '09:00',
-            'patrol_b_time' => '12:00',
-            'patrol_c_time' => '15:00',
+            'patrol_b_time' => '10:00',
+            'patrol_c_time' => '11:00',
         ]);
 
         return [
@@ -113,7 +117,7 @@ class AttendanceScanTest extends TestCase
         ]);
     }
 
-    public function test_duplicate_scan_is_recorded_as_duplicate(): void
+    public function test_duplicate_scan_is_not_stored_in_database(): void
     {
         $users = $this->seedUsersWithRoles();
         $point = $this->createActiveCheckinPoint();
@@ -134,11 +138,15 @@ class AttendanceScanTest extends TestCase
             'longitude' => 106.8163012,
         ]);
 
+        // Only one accepted record should exist; the duplicate scan must NOT be inserted
+        $this->assertDatabaseCount('attendance_logs', 1);
         $this->assertDatabaseHas('attendance_logs', [
             'user_id' => $users['satpam']->id,
             'point_type' => 'CHECKIN',
+            'status' => 'accepted',
+        ]);
+        $this->assertDatabaseMissing('attendance_logs', [
             'status' => 'duplicate',
-            'reason' => 'already_recorded_today',
         ]);
     }
 

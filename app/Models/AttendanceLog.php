@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AttendanceLog extends Model
 {
     protected $fillable = [
+        'attendance_cycle_id',
         'user_id',
         'qr_set_id',
         'qr_set_point_id',
+        'window_group',
         'point_type',
         'token',
         'scanned_at',
@@ -34,6 +36,11 @@ class AttendanceLog extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function attendanceCycle(): BelongsTo
+    {
+        return $this->belongsTo(AttendanceCycle::class);
     }
 
     public function qrSet(): BelongsTo

@@ -77,13 +77,13 @@ class QrSetManagementTest extends TestCase
         $response = $this->actingAs($users['admin'])->post(route('qr-sets.store'));
 
         $response->assertRedirect(route('qr-sets.index'));
-        $response->assertSessionHas('toast.message', 'Satu set QR berhasil dibuat (5 titik).');
+        $response->assertSessionHas('toast.message', 'Satu set QR berhasil dibuat (8 titik).');
 
         $qrSet = QrSet::query()->first();
 
         $this->assertNotNull($qrSet);
         $this->assertTrue($qrSet->is_active);
-        $this->assertSame(5, $qrSet->points()->count());
+        $this->assertSame(8, $qrSet->points()->count());
     }
 
     public function test_admin_can_activate_another_qr_set(): void

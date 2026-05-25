@@ -5,8 +5,8 @@
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h3 class="text-xl font-semibold">Daftar Jadwal Satpam</h3>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Kelola jadwal checkin, checkout, dan
-                        patroli A/B/C per satpam.</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Kelola jadwal checkin, checkout,
+                        patroli 1, standby 1, patroli 2, dan standby 2 per satpam.</p>
                 </div>
                 <a href="{{ route('schedules.create') }}"
                     class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700">
@@ -32,13 +32,16 @@
                                 Checkout</th>
                             <th
                                 class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                Patroli A</th>
+                                Patroli 1</th>
                             <th
                                 class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                Patroli B</th>
+                                Standby 1</th>
                             <th
                                 class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                Patroli C</th>
+                                Patroli 2</th>
+                            <th
+                                class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Standby 2</th>
                             <th
                                 class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
                                 Aksi</th>
@@ -54,13 +57,16 @@
                                     {{ \Illuminate\Support\Carbon::parse($schedule->checkout_time)->format('H:i') }}
                                 </td>
                                 <td class="px-4 py-3 text-sm">
-                                    {{ \Illuminate\Support\Carbon::parse($schedule->patrol_a_time)->format('H:i') }}
+                                    {{ \Illuminate\Support\Carbon::parse($schedule->patrol_1_time)->format('H:i') }}
                                 </td>
                                 <td class="px-4 py-3 text-sm">
-                                    {{ \Illuminate\Support\Carbon::parse($schedule->patrol_b_time)->format('H:i') }}
+                                    {{ \Illuminate\Support\Carbon::parse($schedule->standby_1_time)->format('H:i') }}
                                 </td>
                                 <td class="px-4 py-3 text-sm">
-                                    {{ \Illuminate\Support\Carbon::parse($schedule->patrol_c_time)->format('H:i') }}
+                                    {{ \Illuminate\Support\Carbon::parse($schedule->patrol_2_time)->format('H:i') }}
+                                </td>
+                                <td class="px-4 py-3 text-sm">
+                                    {{ \Illuminate\Support\Carbon::parse($schedule->standby_2_time)->format('H:i') }}
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex justify-end gap-2">
@@ -86,7 +92,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada jadwal
+                                <td colspan="8" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada jadwal
                                     satpam.</td>
                             </tr>
                         @endforelse

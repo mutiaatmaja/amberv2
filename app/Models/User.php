@@ -19,7 +19,7 @@ use Laratrust\Traits\HasRolesAndPermissions;
 class User extends Authenticatable implements LaratrustUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRolesAndPermissions;
+    use HasFactory, HasRolesAndPermissions, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -42,5 +42,10 @@ class User extends Authenticatable implements LaratrustUser
     public function attendanceLogs(): HasMany
     {
         return $this->hasMany(AttendanceLog::class);
+    }
+
+    public function attendanceCycles(): HasMany
+    {
+        return $this->hasMany(AttendanceCycle::class);
     }
 }

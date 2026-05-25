@@ -5,7 +5,7 @@
             <div>
                 <h3 class="text-xl font-semibold">Pengaturan Absensi</h3>
                 <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                    Atur toleransi keterlambatan, kewajiban GPS, dan tampilan peta pada halaman absensi satpam.
+                    Atur toleransi scan, auto checkout, kewajiban GPS, dan tampilan peta pada halaman absensi satpam.
                 </p>
             </div>
         </section>
@@ -17,16 +17,48 @@
                 @csrf
                 @method('PUT')
 
-                <div>
-                    <label for="late_tolerance_minutes" class="text-sm font-semibold">Toleransi Keterlambatan
-                        (Menit)</label>
-                    <input id="late_tolerance_minutes" name="late_tolerance_minutes" type="number" min="0"
-                        max="180" value="{{ old('late_tolerance_minutes', $settings->late_tolerance_minutes) }}"
-                        class="mt-2 w-full rounded-2xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                    <p class="mt-1 text-xs text-slate-500">Dipakai untuk menghitung status Tepat Waktu / Terlambat.</p>
-                    @error('late_tolerance_minutes')
-                        <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p>
-                    @enderror
+                <div class="grid gap-5 md:grid-cols-3">
+                    <div>
+                        <label for="early_tolerance_minutes" class="text-sm font-semibold">Toleransi Lebih Awal
+                            (Menit)</label>
+                        <input id="early_tolerance_minutes" name="early_tolerance_minutes" type="number" min="0"
+                            max="180"
+                            value="{{ old('early_tolerance_minutes', $settings->early_tolerance_minutes) }}"
+                            class="mt-2 w-full rounded-2xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <p class="mt-1 text-xs text-slate-500">Batas scan lebih awal sebelum jadwal. Di luar ini akan
+                            ditolak sebagai terlalu cepat.</p>
+                        @error('early_tolerance_minutes')
+                            <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="late_tolerance_minutes" class="text-sm font-semibold">Toleransi Keterlambatan
+                            (Menit)</label>
+                        <input id="late_tolerance_minutes" name="late_tolerance_minutes" type="number" min="0"
+                            max="180"
+                            value="{{ old('late_tolerance_minutes', $settings->late_tolerance_minutes) }}"
+                            class="mt-2 w-full rounded-2xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <p class="mt-1 text-xs text-slate-500">Dipakai untuk menghitung status Tepat Waktu / Terlambat.
+                        </p>
+                        @error('late_tolerance_minutes')
+                            <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="auto_checkout_grace_minutes" class="text-sm font-semibold">Grace Auto Checkout
+                            (Menit)</label>
+                        <input id="auto_checkout_grace_minutes" name="auto_checkout_grace_minutes" type="number"
+                            min="0" max="240"
+                            value="{{ old('auto_checkout_grace_minutes', $settings->auto_checkout_grace_minutes) }}"
+                            class="mt-2 w-full rounded-2xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        <p class="mt-1 text-xs text-slate-500">Tambahan waktu setelah jadwal checkout sebelum sistem
+                            menutup siklus otomatis sebagai expired.</p>
+                        @error('auto_checkout_grace_minutes')
+                            <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="grid gap-4 md:grid-cols-2">
