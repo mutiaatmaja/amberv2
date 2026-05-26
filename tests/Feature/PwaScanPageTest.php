@@ -28,6 +28,8 @@ class PwaScanPageTest extends TestCase
         $response->assertSee('Scan QR');
         $response->assertSee('Mulai Scanner');
         $response->assertSee('Pilih Kamera');
+        $response->assertSee('Scanner pihak ketiga');
+        $response->assertSee('Cocok untuk scanner handheld');
         $response->assertSee('/js/html5-qrcode.min.js', false);
     }
 

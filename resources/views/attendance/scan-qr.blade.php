@@ -83,9 +83,15 @@
 
             <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
                 <div>
-                    <label for="manualQrUrl" class="mb-2 block text-sm font-medium">Tempel URL QR secara manual</label>
-                    <input id="manualQrUrl" type="url" placeholder="https://domain-anda.com/absen/TOKEN/CHECKIN"
+                    <label for="manualQrUrl" class="mb-2 block text-sm font-medium">Scanner pihak ketiga / input
+                        manual</label>
+                    <input id="manualQrUrl" type="text" inputmode="url" autocomplete="off" autocapitalize="off"
+                        spellcheck="false" placeholder="Scan langsung dari handheld scanner atau tempel URL /absen/..."
                         class="block w-full rounded-2xl border-slate-300 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-950">
+                    <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                        Cocok untuk scanner handheld. Jika perangkat mengirim tombol Enter otomatis, URL akan langsung
+                        dibuka.
+                    </p>
                 </div>
                 <button type="button" id="openManualQr"
                     class="self-end rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
@@ -116,6 +122,7 @@
             var qrScanner = null;
             var scannerRunning = false;
             var availableCameras = [];
+            var hasAttemptedAutoStart = false;
 
             function setStatus(message) {
                 scannerStatus.textContent = message;
@@ -179,6 +186,41 @@
                     option.textContent = camera.label || 'Kamera ' + (index + 1);
                     cameraSelect.appendChild(option);
                 });
+
+                var preferredCameraId = resolvePreferredCameraId();
+
+                if (preferredCameraId) {
+                    cameraSelect.value = preferredCameraId;
+                }
+            }
+
+            function isRearCameraLabel(label) {
+                var normalizedLabel = (label || '').toLowerCase();
+
+                return normalizedLabel.includes('back') || normalizedLabel.includes('rear') || normalizedLabel.includes(
+                        'environment') ||
+                    normalizedLabel.includes('belakang') || normalizedLabel.includes('trasera');
+            }
+
+            function resolvePreferredCameraId() {
+                var rearCamera = availableCameras.find(function(camera) {
+                    return isRearCameraLabel(camera.label);
+                });
+
+                return rearCamera ? rearCamera.id : availableCameras[0] ? availableCameras[0].id : '';
+            }
+
+            function shouldAutoStartScanner() {
+                return window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+            }
+
+            async function attemptAutoStart() {
+                if (hasAttemptedAutoStart || !shouldAutoStartScanner()) {
+                    return;
+                }
+
+                hasAttemptedAutoStart = true;
+                await startScanner();
             }
 
             async function loadCameras() {
@@ -196,6 +238,8 @@
 
                     updateCameraOptions(cameras);
                     setAlert('');
+                    setStatus('Kamera siap digunakan.');
+                    attemptAutoStart();
                 } catch (error) {
                     setAlert('Daftar kamera belum bisa dimuat. Izinkan kamera lalu coba lagi.');
                 }
@@ -289,6 +333,15 @@
             });
 
             manualOpenButton.addEventListener('click', function() {
+                openScannedUrl(manualInput.value);
+            });
+
+            manualInput.addEventListener('keydown', function(event) {
+                if (event.key !== 'Enter') {
+                    return;
+                }
+
+                event.preventDefault();
                 openScannedUrl(manualInput.value);
             });
 
