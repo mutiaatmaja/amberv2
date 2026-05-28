@@ -9,6 +9,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#1f6f64">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Amber">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <title>{{ $title }}</title>
     <script>
         window.tailwind = window.tailwind || {};
@@ -35,6 +41,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <script defer src="{{ asset('js/app-shell.js') }}?v={{ filemtime(public_path('js/app-shell.js')) }}"></script>
+    <script defer src="{{ asset('js/pwa.js') }}?v={{ filemtime(public_path('js/pwa.js')) }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
@@ -107,6 +114,20 @@
                     </span>
                     Dashboard
                 </a>
+
+                @role('satpam')
+                    <a href="{{ route('scan-qr') }}" @click="handleNavClick()"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('scan-qr') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
+                        <span
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 {{ request()->routeIs('scan-qr') ? 'text-white' : 'bg-slate-100 text-emerald-700 dark:bg-slate-800 dark:text-emerald-300' }}">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M4 3a1 1 0 0 0-1 1v3a1 1 0 1 0 2 0V5h2a1 1 0 1 0 0-2H4Zm9 0a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1h-3ZM4 13a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3a1 1 0 1 0 0-2H5v-1a1 1 0 0 0-1-1Zm12 0a1 1 0 0 0-1 1v1h-2a1 1 0 1 0 0 2h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1ZM7 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H7Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H7Z" />
+                            </svg>
+                        </span>
+                        Scan QR
+                    </a>
+                @endrole
 
                 @role('admin|supervisor')
                     <a href="{{ route('users.index') }}" @click="handleNavClick()"
@@ -186,6 +207,11 @@
             </nav>
 
             <div class="mt-auto space-y-3 pt-8">
+                <button type="button" data-pwa-install hidden
+                    class="w-full rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60">
+                    Install Aplikasi
+                </button>
+
                 <button type="button"
                     class="flex w-full items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-slate-200 dark:hover:border-emerald-500 dark:hover:text-emerald-300"
                     @click="toggleTheme">

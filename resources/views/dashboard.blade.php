@@ -27,6 +27,10 @@
 
                 @if ($isSatpam)
                     <div class="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
+                        <a href="{{ route('scan-qr') }}"
+                            class="rounded-full bg-white px-4 py-2 text-emerald-700 transition hover:bg-emerald-50">
+                            Scan QR
+                        </a>
                         <a href="#proses-hari-ini"
                             class="rounded-full border border-white/20 bg-white/10 px-4 py-2 transition hover:bg-white/20">
                             Proses Absen Hari Ini

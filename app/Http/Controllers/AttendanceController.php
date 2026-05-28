@@ -38,9 +38,9 @@ class AttendanceController extends Controller
 
         $visibleCycle = AttendanceCycle::query()
             ->with('attendanceLogs')
+            ->open()
             ->where('user_id', $user->id)
-            ->orderByRaw("case when status = 'open' then 0 else 1 end")
-            ->orderByDesc('started_at')
+            ->latest('started_at')
             ->first();
 
         $acceptedLogs = $visibleCycle
@@ -82,6 +82,14 @@ class AttendanceController extends Controller
             })
             ->values();
 
+        $scanAvailability = $this->scanAvailabilityState(
+            pointType: $normalizedPointType,
+            schedule: $schedule,
+            settings: $settings,
+            cycle: $visibleCycle?->status === AttendanceCycle::STATUS_OPEN ? $visibleCycle : null,
+            scanTime: now(),
+        );
+
         return view('attendance.scan', [
             'token' => $token,
             'pointType' => $normalizedPointType,
@@ -90,6 +98,7 @@ class AttendanceController extends Controller
             'attendanceRows' => $attendanceRows,
             'activeCycle' => $visibleCycle,
             'settings' => $settings,
+            'scanAvailability' => $scanAvailability,
         ]);
     }
 
@@ -407,6 +416,55 @@ class AttendanceController extends Controller
         return $scheduledAt;
     }
 
+    /**
+     * @return array{disabled: bool, message: ?string}
+     */
+    private function scanAvailabilityState(
+        string $pointType,
+        ?Schedule $schedule,
+        AppSetting $settings,
+        ?AttendanceCycle $cycle,
+        Carbon $scanTime,
+    ): array {
+        if (! $schedule) {
+            return [
+                'disabled' => false,
+                'message' => null,
+            ];
+        }
+
+        if ($pointType === 'CHECKIN') {
+            $scheduledAt = Carbon::parse($scanTime->toDateString().' '.$schedule->checkin_time);
+        } elseif ($cycle) {
+            $scheduledAt = $this->scheduledAtForPointType($cycle, $schedule, $pointType);
+        } else {
+            $scheduledAt = Carbon::parse($scanTime->toDateString().' '.$this->scheduleTimeForPointType($schedule, $pointType));
+
+            if ($schedule->checkin_time && $this->scheduleTimeForPointType($schedule, $pointType) < $schedule->checkin_time) {
+                $scheduledAt->addDay();
+            }
+        }
+
+        if (! isset($scheduledAt) || ! $scheduledAt) {
+            return [
+                'disabled' => false,
+                'message' => null,
+            ];
+        }
+
+        if ($scanTime->lt($scheduledAt->copy()->subMinutes($settings->early_tolerance_minutes))) {
+            return [
+                'disabled' => true,
+                'message' => 'Jadwal Anda Belum Dimulai',
+            ];
+        }
+
+        return [
+            'disabled' => false,
+            'message' => null,
+        ];
+    }
+
     private function validateWindow(
         string $pointType,
         AttendanceCycle $cycle,
@@ -525,7 +583,7 @@ class AttendanceController extends Controller
             'too_early' => 'Absensi terlalu cepat dari jadwal yang diizinkan.',
             'outside_window' => 'Jadwal untuk titik ini sudah lewat atau sudah masuk sesi berikutnya.',
             'no_active_cycle' => 'Lakukan checkin terlebih dahulu untuk membuka siklus absensi.',
-            'active_cycle_exists' => 'Masih ada siklus absensi yang aktif. Selesaikan checkout terlebih dahulu.',
+            'active_cycle_exists' => 'Anda Sudah Absen jadi Masih ada siklus absensi yang aktif. Selesaikan checkout terlebih dahulu jika waktunya sudah tiba.',
             'schedule_not_found' => 'Jadwal satpam belum tersedia.',
             'already_recorded_in_cycle' => 'Absensi titik ini sudah tercatat pada siklus aktif.',
             default => 'QR tidak valid atau set QR sedang nonaktif.',

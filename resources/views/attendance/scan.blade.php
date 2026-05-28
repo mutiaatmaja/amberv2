@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1f6f64">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <title>Catat Absen | {{ config('app.name', 'Amber') }}</title>
     <script>
         window.tailwind = window.tailwind || {};
@@ -20,6 +23,7 @@
         };
     </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script defer src="{{ asset('js/pwa.js') }}?v={{ filemtime(public_path('js/pwa.js')) }}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -52,10 +56,17 @@
                 <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
                 <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
 
-                <button type="submit" id="submitBtn"
-                    class="w-full rounded-2xl bg-emerald-600 px-4 py-4 text-lg font-extrabold text-white shadow-lg shadow-emerald-700/25 transition hover:bg-emerald-700">
+                <button type="submit" id="submitBtn" @disabled($scanAvailability['disabled'])
+                    class="w-full rounded-2xl px-4 py-4 text-lg font-extrabold text-white transition {{ $scanAvailability['disabled'] ? 'cursor-not-allowed bg-slate-400 shadow-none' : 'bg-emerald-600 shadow-lg shadow-emerald-700/25 hover:bg-emerald-700' }}">
                     CATAT ABSEN
                 </button>
+
+                @if ($scanAvailability['message'])
+                    <div
+                        class="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-700">
+                        {{ $scanAvailability['message'] }}
+                    </div>
+                @endif
 
                 <p class="text-center text-xs text-slate-500" id="locationStatus">
                     {{ $settings->require_gps ? 'Mendeteksi lokasi GPS...' : 'GPS bersifat opsional sesuai pengaturan admin.' }}
@@ -183,6 +194,11 @@
             }
 
             form.addEventListener('submit', function(event) {
+                if (submitBtn.disabled) {
+                    event.preventDefault();
+                    return;
+                }
+
                 if (isGpsRequired && (!latInput.value || !lngInput.value)) {
                     event.preventDefault();
                     locationStatus.textContent = 'GPS wajib aktif. Izinkan lokasi lalu coba lagi.';

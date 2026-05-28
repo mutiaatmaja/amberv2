@@ -7,12 +7,20 @@ use App\Models\QrSet;
 use App\Models\Role;
 use App\Models\Schedule;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AttendanceScanTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+
+        parent::tearDown();
+    }
 
     /**
      * @return array{admin: User, satpam: User}
@@ -88,6 +96,29 @@ class AttendanceScanTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('CATAT ABSEN');
+    }
+
+    public function test_scan_page_disables_submit_before_schedule_starts(): void
+    {
+        $users = $this->seedUsersWithRoles();
+        $point = $this->createActiveCheckinPoint();
+
+        AppSetting::current()->update([
+            'early_tolerance_minutes' => 30,
+            'require_gps' => true,
+            'show_map' => true,
+        ]);
+
+        Carbon::setTestNow('2026-05-26 07:00:00');
+
+        $response = $this->actingAs($users['satpam'])->get(route('attendance.scan', [
+            'token' => $point['point']->token,
+            'pointType' => 'CHECKIN',
+        ]));
+
+        $response->assertOk();
+        $response->assertSee('Jadwal Anda Belum Dimulai');
+        $response->assertSee('disabled', false);
     }
 
     public function test_satpam_scan_stores_latitude_and_longitude(): void

@@ -179,6 +179,35 @@ class AttendanceCycleFlowTest extends TestCase
         ]);
     }
 
+    public function test_scan_page_does_not_show_previous_cycle_checkin_after_cycle_has_expired(): void
+    {
+        $satpam = $this->createSatpamWithSchedule([
+            'checkin_time' => '18:00',
+            'checkout_time' => '04:00',
+        ]);
+        $checkin = $this->createPoint('CHECKIN');
+
+        Carbon::setTestNow('2026-05-25 18:07:00');
+        $this->actingAs($satpam)->post(route('attendance.store', [
+            'token' => $checkin->token,
+            'pointType' => 'CHECKIN',
+        ]), [
+            'latitude' => -6.2,
+            'longitude' => 106.8,
+        ])->assertRedirect();
+
+        Carbon::setTestNow('2026-05-26 18:10:00');
+
+        $response = $this->actingAs($satpam)->get(route('attendance.scan', [
+            'token' => $checkin->token,
+            'pointType' => 'CHECKIN',
+        ]));
+
+        $response->assertOk();
+        $response->assertDontSee('18:07');
+        $response->assertSee('Belum');
+    }
+
     private function createSatpamWithSchedule(array $overrides = []): User
     {
         $role = Role::query()->firstOrCreate(['name' => 'satpam'], ['display_name' => 'Satpam']);

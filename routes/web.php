@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardPasswordController;
 use App\Http\Controllers\QrSetManagementController;
+use App\Http\Controllers\ScanQrController;
 use App\Http\Controllers\ScheduleManagementController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Middleware\EnsureAdminOrSupervisor;
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::middleware([EnsureSatpam::class, 'throttle:20,1'])->group(function (): void {
+        Route::get('/scan-qr', ScanQrController::class)->name('scan-qr');
         Route::get('/absen/{token}/{pointType}', [AttendanceController::class, 'show'])->name('attendance.scan');
         Route::post('/absen/{token}/{pointType}', [AttendanceController::class, 'store'])->name('attendance.store');
     });

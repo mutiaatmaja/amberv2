@@ -1,0 +1,24 @@
+{
+    "name": "Amber Security Panel",
+    "short_name": "Amber",
+    "description": "PWA absensi satpam untuk scan QR dan pencatatan absensi.",
+    "start_url": "/dashboard",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#f4f8f7",
+    "theme_color": "#1f6f64",
+    "icons": [
+        {
+            "src": "/icons/amber-icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/amber-icon-maskable.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
+        }
+    ]
+}
