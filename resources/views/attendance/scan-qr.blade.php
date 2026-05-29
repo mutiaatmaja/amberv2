@@ -286,6 +286,21 @@
                 setStatus('Scanner dihentikan.');
             }
 
+            function closeOrRedirect(fallbackUrl) {
+                try {
+                    window.close();
+                } catch (error) {
+                    window.location.href = fallbackUrl;
+                    return;
+                }
+
+                window.setTimeout(function() {
+                    if (!document.hidden) {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 250);
+            }
+
             async function startScanner() {
                 setAlert('');
                 setStatus('Menyalakan kamera...');
@@ -353,7 +368,7 @@
                     setStatus('Menutup scanner dan kembali ke dashboard...');
 
                     stopScanner().finally(function() {
-                        window.location.href = button.dataset.dashboardUrl;
+                        closeOrRedirect(button.dataset.dashboardUrl);
                     });
                 });
             });
