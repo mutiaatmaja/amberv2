@@ -7,14 +7,14 @@
                     Scan QR absensi langsung dari aplikasi.
                 </h3>
                 <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-100/90 sm:text-base">
-                    Arahkan kamera ke QR absensi. QR harus memakai domain aplikasi ini dan format path
-                    <span class="font-semibold">/absen/token/pointType</span>.
+                    Kamera Ada dibawah, aplikasi terbuka, tinggal scan QR absensi yang muncul di layar. Tidak perlu buka
+                    aplikasi kamera atau
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
                     <button type="button" id="startScanner"
                         class="rounded-full bg-white px-4 py-2 text-emerald-700 transition hover:bg-emerald-50">
-                        Mulai Scanner
+                        <a href="#kamera">Mulai Scanner</a>
                     </button>
                     <button type="button" id="stopScanner"
                         class="rounded-full border border-white/20 bg-white/10 px-4 py-2 transition hover:bg-white/20">
@@ -49,7 +49,7 @@
             </div>
         </section>
 
-        <section
+        <section id="kamera"
             class="rounded-4xl border border-slate-200 bg-white p-6 shadow-panel dark:border-slate-800 dark:bg-slate-900">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
