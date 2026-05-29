@@ -27,6 +27,7 @@ class PwaScanPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('Scan QR');
         $response->assertSee('Mulai Scanner');
+        $response->assertSee('Selesai dan Kembali');
         $response->assertSee('Pilih Kamera');
         $response->assertSee('Scanner pihak ketiga');
         $response->assertSee('Cocok untuk scanner handheld');

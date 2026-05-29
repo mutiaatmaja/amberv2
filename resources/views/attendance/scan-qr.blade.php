@@ -20,6 +20,10 @@
                         class="rounded-full border border-white/20 bg-white/10 px-4 py-2 transition hover:bg-white/20">
                         Hentikan
                     </button>
+                    <button type="button" data-finish-scanner data-dashboard-url="{{ route('dashboard') }}"
+                        class="hidden rounded-full border border-white/20 bg-slate-900/25 px-4 py-2 transition hover:bg-slate-900/40 md:inline-flex">
+                        Selesai dan Kembali
+                    </button>
                 </div>
             </div>
 
@@ -103,6 +107,16 @@
                 class="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
             </div>
         </section>
+
+        <div class="sticky bottom-4 z-10 md:hidden">
+            <div
+                class="rounded-3xl border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
+                <button type="button" data-finish-scanner data-dashboard-url="{{ route('dashboard') }}"
+                    class="flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
+                    Selesai dan Kembali
+                </button>
+            </div>
+        </div>
     </div>
 
     <script src="{{ asset('js/html5-qrcode.min.js') }}?v={{ filemtime(public_path('js/html5-qrcode.min.js')) }}"></script>
@@ -114,6 +128,7 @@
             var alertBox = document.getElementById('scannerAlert');
             var startButton = document.getElementById('startScanner');
             var stopButton = document.getElementById('stopScanner');
+            var finishScannerButtons = document.querySelectorAll('[data-finish-scanner]');
             var cameraSelect = document.getElementById('cameraSelect');
             var refreshCamerasButton = document.getElementById('refreshCameras');
             var restartScannerButton = document.getElementById('restartScanner');
@@ -329,6 +344,17 @@
             restartScannerButton.addEventListener('click', function() {
                 stopScanner().finally(function() {
                     startScanner();
+                });
+            });
+
+            finishScannerButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    setAlert('');
+                    setStatus('Menutup scanner dan kembali ke dashboard...');
+
+                    stopScanner().finally(function() {
+                        window.location.href = button.dataset.dashboardUrl;
+                    });
                 });
             });
 
