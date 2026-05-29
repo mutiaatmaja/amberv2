@@ -96,6 +96,7 @@ class AttendanceScanTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('CATAT ABSEN');
+        $response->assertSee('Kembali');
     }
 
     public function test_scan_page_disables_submit_before_schedule_starts(): void

@@ -80,6 +80,13 @@
             </form>
         </section>
 
+        <div class="mt-3">
+            <button type="button" id="backButton" data-dashboard-url="{{ route('dashboard') }}"
+                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+                Kembali
+            </button>
+        </div>
+
         @if ($settings->show_map)
             <section class="mt-4 rounded-3xl bg-white p-4 shadow-sm">
                 <div class="mb-3 flex items-center justify-between">
@@ -136,6 +143,7 @@
             var locationStatus = document.getElementById('locationStatus');
             var form = document.getElementById('attendanceForm');
             var submitBtn = document.getElementById('submitBtn');
+            var backButton = document.getElementById('backButton');
             var isGpsRequired = {{ $settings->require_gps ? 'true' : 'false' }};
 
             function updateClock() {
@@ -193,6 +201,23 @@
                 });
             }
 
+            function closeOrRedirect() {
+                var fallbackUrl = backButton.dataset.dashboardUrl;
+
+                try {
+                    window.close();
+                } catch (error) {
+                    window.location.href = fallbackUrl;
+                    return;
+                }
+
+                window.setTimeout(function() {
+                    if (!document.hidden) {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 250);
+            }
+
             form.addEventListener('submit', function(event) {
                 if (submitBtn.disabled) {
                     event.preventDefault();
@@ -208,6 +233,10 @@
 
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Memproses...';
+            });
+
+            backButton.addEventListener('click', function() {
+                closeOrRedirect();
             });
 
             updateClock();
