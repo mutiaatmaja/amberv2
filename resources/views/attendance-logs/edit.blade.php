@@ -1,5 +1,10 @@
+@push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+@endpush
+
 <x-layouts.app :title="'Ubah Absensi | ' . config('app.name', 'Amber')" heading="Ubah Absensi">
-    <div class="mx-auto max-w-2xl">
+    <div class="mx-auto max-w-4xl">
         <section
             class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
 
@@ -12,6 +17,52 @@
                     <dt class="font-medium text-slate-500 dark:text-slate-400">Titik</dt>
                     <dd>{{ str_replace('_', ' ', $log->point_type) }}</dd>
                 </dl>
+            </div>
+
+            <div
+                class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900/60">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h3 class="text-base font-semibold">Lokasi GPS</h3>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                            Detail posisi saat absensi dicatat.
+                        </p>
+                    </div>
+                    @if ($log->latitude !== null && $log->longitude !== null)
+                        <a href="https://www.google.com/maps?q={{ $log->latitude }},{{ $log->longitude }}"
+                            target="_blank" rel="noopener noreferrer"
+                            class="rounded-2xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
+                            Buka di Google Maps
+                        </a>
+                    @endif
+                </div>
+
+                @if ($log->latitude !== null && $log->longitude !== null)
+                    <dl class="mt-4 grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-2xl bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                            <dt
+                                class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                Latitude</dt>
+                            <dd class="mt-1 text-sm font-semibold">{{ $log->latitude }}</dd>
+                        </div>
+                        <div class="rounded-2xl bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                            <dt
+                                class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                Longitude</dt>
+                            <dd class="mt-1 text-sm font-semibold">{{ $log->longitude }}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div id="gpsMap" class="h-72 w-full" data-lat="{{ $log->latitude }}"
+                            data-lng="{{ $log->longitude }}"></div>
+                    </div>
+                @else
+                    <div
+                        class="mt-4 rounded-2xl border border-dashed border-slate-300 px-4 py-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                        Lokasi GPS tidak tersedia untuk absensi ini.
+                    </div>
+                @endif
             </div>
 
             <h3 class="text-xl font-semibold">Form Ubah Absensi</h3>
@@ -70,3 +121,39 @@
         </section>
     </div>
 </x-layouts.app>
+
+@push('scripts')
+    @if ($log->latitude !== null && $log->longitude !== null)
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script>
+            (function() {
+                var mapElement = document.getElementById('gpsMap');
+
+                if (!mapElement || typeof L === 'undefined') {
+                    return;
+                }
+
+                var latitude = Number(mapElement.dataset.lat);
+                var longitude = Number(mapElement.dataset.lng);
+
+                if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
+                    return;
+                }
+
+                var map = L.map(mapElement, {
+                    scrollWheelZoom: false,
+                }).setView([latitude, longitude], 16);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors',
+                }).addTo(map);
+
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('Lokasi absensi')
+                    .openPopup();
+            })();
+        </script>
+    @endif
+@endpush

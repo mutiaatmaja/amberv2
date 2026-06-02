@@ -43,6 +43,7 @@
     <script defer src="{{ asset('js/app-shell.js') }}?v={{ filemtime(public_path('js/app-shell.js')) }}"></script>
     <script defer src="{{ asset('js/pwa.js') }}?v={{ filemtime(public_path('js/pwa.js')) }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('styles')
 </head>
 
 <body class="min-h-full bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100" x-data="appShell()"
@@ -262,6 +263,7 @@
             </main>
         </div>
     </div>
+    @stack('scripts')
 </body>
 
 </html>

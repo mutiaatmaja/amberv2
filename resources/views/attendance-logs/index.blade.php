@@ -99,9 +99,14 @@
                                                         {{ $point['display_time'] }}
                                                     </span>
                                                     <a href="{{ route('attendance-logs.edit', $point['log']->id) }}"
-                                                        class="rounded-lg border border-slate-300 px-2 py-0.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-                                                        title="Edit">
-                                                        Ubah
+                                                        class="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                                                        title="Lihat detail absensi" aria-label="Lihat detail absensi">
+                                                        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                            aria-hidden="true">
+                                                            <path
+                                                                d="M10 4c4.438 0 7.52 3.126 8.71 5.1a1.67 1.67 0 0 1 0 1.8C17.52 12.874 14.438 16 10 16s-7.52-3.126-8.71-5.1a1.67 1.67 0 0 1 0-1.8C2.48 7.126 5.562 4 10 4Zm0 2C6.645 6 4.09 8.35 3.01 10 4.09 11.65 6.645 14 10 14s5.91-2.35 6.99-4C15.91 8.35 13.355 6 10 6Zm0 1.5A2.5 2.5 0 1 1 10 12.5 2.5 2.5 0 0 1 10 7.5Zm0 2A.5.5 0 1 0 10 10.5.5.5 0 0 0 10 9.5Z" />
+                                                        </svg>
+                                                        <span class="sr-only">Lihat detail absensi</span>
                                                     </a>
                                                 </div>
                                             @elseif ($point['is_missed'])

@@ -46,6 +46,7 @@ class AttendanceLogManagementTest extends TestCase
         $response->assertSee('Checkin');
         // scan time appears as HH:MM badge
         $response->assertSee($log->scanned_at->format('H:i'));
+        $response->assertSee('aria-label="Lihat detail absensi"', false);
     }
 
     public function test_admin_can_filter_logs_by_satpam(): void
@@ -69,7 +70,7 @@ class AttendanceLogManagementTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $satpam = $this->createSatpamUser();
-        $log = $this->createLog($satpam);
+        $log = $this->createLog($satpam, 'accepted', -6.2012, 106.8163);
 
         $response = $this->actingAs($admin)
             ->get(route('attendance-logs.edit', $log));
@@ -77,6 +78,10 @@ class AttendanceLogManagementTest extends TestCase
         $response->assertOk();
         $response->assertSee('Form Ubah Absensi');
         $response->assertSee($satpam->name);
+        $response->assertSee('Lokasi GPS');
+        $response->assertSee('-6.2012');
+        $response->assertSee('106.8163');
+        $response->assertSee('Buka di Google Maps');
     }
 
     public function test_admin_can_update_attendance_log(): void
@@ -165,7 +170,7 @@ class AttendanceLogManagementTest extends TestCase
         return $user;
     }
 
-    private function createLog(User $satpam, string $status = 'accepted'): AttendanceLog
+    private function createLog(User $satpam, string $status = 'accepted', ?float $latitude = null, ?float $longitude = null): AttendanceLog
     {
         $cycle = AttendanceCycle::query()->create([
             'user_id' => $satpam->id,
@@ -200,8 +205,8 @@ class AttendanceLogManagementTest extends TestCase
             'scanned_at' => now(),
             'status' => $status,
             'reason' => null,
-            'latitude' => null,
-            'longitude' => null,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'ip_address' => '127.0.0.1',
             'user_agent' => 'TestAgent',
         ]);
