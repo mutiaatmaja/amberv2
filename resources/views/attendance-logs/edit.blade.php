@@ -1,6 +1,31 @@
 @push('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        .attendance-map-pin {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            border-radius: 9999px;
+            background: #dc2626;
+            border: 3px solid #fff;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.28);
+        }
+
+        .attendance-map-pin::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -8px;
+            width: 10px;
+            height: 10px;
+            background: #dc2626;
+            transform: translateX(-50%) rotate(45deg);
+            border-bottom: 3px solid #fff;
+            border-right: 3px solid #fff;
+            box-sizing: border-box;
+        }
+    </style>
 @endpush
 
 @push('scripts')
@@ -22,12 +47,6 @@
                     return;
                 }
 
-                L.Icon.Default.mergeOptions({
-                    iconRetinaUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-                    iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-                    shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
-                });
-
                 var map = L.map(mapElement, {
                     scrollWheelZoom: false,
                 }).setView([latitude, longitude], 16);
@@ -37,7 +56,17 @@
                     attribution: '&copy; OpenStreetMap contributors',
                 }).addTo(map);
 
-                L.marker([latitude, longitude]).addTo(map)
+                var markerIcon = L.divIcon({
+                    className: 'attendance-map-pin-wrapper',
+                    html: '<span class="attendance-map-pin"></span>',
+                    iconSize: [20, 28],
+                    iconAnchor: [10, 28],
+                    popupAnchor: [0, -24],
+                });
+
+                L.marker([latitude, longitude], {
+                        icon: markerIcon,
+                    }).addTo(map)
                     .bindPopup('Lokasi absensi')
                     .openPopup();
             })();

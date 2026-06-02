@@ -84,7 +84,7 @@ class AttendanceLogManagementTest extends TestCase
         $response->assertSee('Buka di Google Maps');
         $response->assertSee('cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css', false);
         $response->assertSee('cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js', false);
-        $response->assertSee('cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png', false);
+        $response->assertSee('attendance-map-pin', false);
     }
 
     public function test_admin_can_update_attendance_log(): void
