@@ -1,10 +1,12 @@
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/leaflet.css') }}?v={{ filemtime(public_path('css/leaflet.css')) }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 @endpush
 
 @push('scripts')
     @if ($log->latitude !== null && $log->longitude !== null)
-        <script src="{{ asset('js/leaflet.js') }}?v={{ filemtime(public_path('js/leaflet.js')) }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script>
             (function() {
                 var mapElement = document.getElementById('gpsMap');
@@ -19,6 +21,12 @@
                 if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
                     return;
                 }
+
+                L.Icon.Default.mergeOptions({
+                    iconRetinaUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                    iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
+                    shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
+                });
 
                 var map = L.map(mapElement, {
                     scrollWheelZoom: false,
