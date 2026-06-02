@@ -1,6 +1,40 @@
 @push('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="{{ asset('css/leaflet.css') }}?v={{ filemtime(public_path('css/leaflet.css')) }}" />
+@endpush
+
+@push('scripts')
+    @if ($log->latitude !== null && $log->longitude !== null)
+        <script src="{{ asset('js/leaflet.js') }}?v={{ filemtime(public_path('js/leaflet.js')) }}"></script>
+        <script>
+            (function() {
+                var mapElement = document.getElementById('gpsMap');
+
+                if (!mapElement || typeof L === 'undefined') {
+                    return;
+                }
+
+                var latitude = Number(mapElement.dataset.lat);
+                var longitude = Number(mapElement.dataset.lng);
+
+                if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
+                    return;
+                }
+
+                var map = L.map(mapElement, {
+                    scrollWheelZoom: false,
+                }).setView([latitude, longitude], 16);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors',
+                }).addTo(map);
+
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('Lokasi absensi')
+                    .openPopup();
+            })();
+        </script>
+    @endif
 @endpush
 
 <x-layouts.app :title="'Ubah Absensi | ' . config('app.name', 'Amber')" heading="Ubah Absensi">
@@ -121,39 +155,3 @@
         </section>
     </div>
 </x-layouts.app>
-
-@push('scripts')
-    @if ($log->latitude !== null && $log->longitude !== null)
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <script>
-            (function() {
-                var mapElement = document.getElementById('gpsMap');
-
-                if (!mapElement || typeof L === 'undefined') {
-                    return;
-                }
-
-                var latitude = Number(mapElement.dataset.lat);
-                var longitude = Number(mapElement.dataset.lng);
-
-                if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
-                    return;
-                }
-
-                var map = L.map(mapElement, {
-                    scrollWheelZoom: false,
-                }).setView([latitude, longitude], 16);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; OpenStreetMap contributors',
-                }).addTo(map);
-
-                L.marker([latitude, longitude]).addTo(map)
-                    .bindPopup('Lokasi absensi')
-                    .openPopup();
-            })();
-        </script>
-    @endif
-@endpush

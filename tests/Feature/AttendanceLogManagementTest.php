@@ -82,6 +82,8 @@ class AttendanceLogManagementTest extends TestCase
         $response->assertSee('-6.2012');
         $response->assertSee('106.8163');
         $response->assertSee('Buka di Google Maps');
+        $response->assertSee('/css/leaflet.css', false);
+        $response->assertSee('/js/leaflet.js', false);
     }
 
     public function test_admin_can_update_attendance_log(): void
