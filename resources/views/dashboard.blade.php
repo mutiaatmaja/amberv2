@@ -1,5 +1,5 @@
-<x-layouts.app :title="'Dashboard | ' . config('app.name', 'Amber')" :heading="$isSatpam ? 'Dashboard Satpam' : 'Dashboard Utama'">
-    <div class="space-y-6" @if ($isSatpam) x-data="{ recapTab: 'daily' }" @endif>
+<x-layouts.app :title="'Dashboard | ' . config('app.name', 'Amber')" :heading="$isSatpam ? 'Dashboard Satpam' : ($isCleaning ? 'Dashboard Kebersihan' : 'Dashboard Utama')">
+    <div class="space-y-6" @if ($isSatpam || $isCleaning) x-data="{ recapTab: 'daily' }" @endif>
         <section class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
             <div class="overflow-hidden rounded-4xl bg-emerald-700 p-6 text-white shadow-panel sm:p-8">
                 <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-100">Dashboard</p>
@@ -10,6 +10,9 @@
                     @if ($isSatpam)
                         Pantau proses absen hari ini, lihat rekap harian dan bulanan, lalu ubah password langsung dari
                         dashboard satpam.
+                    @elseif ($isCleaning)
+                        Pantau proses absen hari ini, lihat rekap harian dan bulanan, lalu ubah password langsung dari
+                        dashboard kebersihan.
                     @else
                         Autentikasi berhasil. Dari halaman ini nanti panel absensi, patroli, monitoring, dan laporan
                         bisa dikembangkan tanpa mengubah alur login/logout yang sudah ada.
@@ -25,9 +28,9 @@
                     @endforeach
                 </div>
 
-                @if ($isSatpam)
+                @if ($isSatpam || $isCleaning)
                     <div class="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
-                        <a href="{{ route('scan-qr') }}"
+                        <a href="{{ $isSatpam ? route('scan-qr') : route('cleaning-scan-qr') }}"
                             class="rounded-full bg-white px-4 py-2 text-emerald-700 transition hover:bg-emerald-50">
                             Scan QR
                         </a>
@@ -65,7 +68,7 @@
                         <dt class="text-xs uppercase tracking-[0.25em] text-slate-400">Jumlah Role</dt>
                         <dd class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ $user->roles->count() }}</dd>
                     </div>
-                    @if ($isSatpam)
+                    @if ($isSatpam || $isCleaning)
                         <div>
                             <dt class="text-xs uppercase tracking-[0.25em] text-slate-400">Jadwal Hari Ini</dt>
                             <dd class="mt-2 text-sm text-slate-600 dark:text-slate-300">
@@ -89,7 +92,7 @@
             @endforeach
         </section>
 
-        @if ($isSatpam)
+        @if ($isSatpam || $isCleaning)
             <section id="proses-hari-ini"
                 class="rounded-4xl border border-slate-200 bg-white p-6 shadow-panel dark:border-slate-800 dark:bg-slate-900">
                 <div class="flex flex-wrap items-end justify-between gap-4">

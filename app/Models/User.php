@@ -39,6 +39,11 @@ class User extends Authenticatable implements LaratrustUser
         return $this->hasOne(Schedule::class);
     }
 
+    public function cleaningSchedule(): HasOne
+    {
+        return $this->hasOne(CleaningSchedule::class);
+    }
+
     public function attendanceLogs(): HasMany
     {
         return $this->hasMany(AttendanceLog::class);

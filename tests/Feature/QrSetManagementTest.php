@@ -70,20 +70,24 @@ class QrSetManagementTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_generate_qr_set_with_five_points(): void
+    public function test_admin_can_generate_combined_qr_set_for_satpam_and_kebersihan(): void
     {
         $users = $this->seedUsersWithRoles();
 
         $response = $this->actingAs($users['admin'])->post(route('qr-sets.store'));
 
         $response->assertRedirect(route('qr-sets.index'));
-        $response->assertSessionHas('toast.message', 'Satu set QR berhasil dibuat (8 titik).');
+        $response->assertSessionHas('toast.message', 'Satu set QR berhasil dibuat (10 titik: Satpam + Kebersihan).');
 
         $qrSet = QrSet::query()->first();
 
         $this->assertNotNull($qrSet);
         $this->assertTrue($qrSet->is_active);
-        $this->assertSame(8, $qrSet->points()->count());
+        $this->assertSame(10, $qrSet->points()->count());
+        $this->assertDatabaseHas('qr_set_points', [
+            'qr_set_id' => $qrSet->id,
+            'point_type' => 'CLEANING_BREAK_IN',
+        ]);
     }
 
     public function test_admin_can_activate_another_qr_set(): void

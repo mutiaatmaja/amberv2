@@ -35,6 +35,12 @@ class DatabaseSeeder extends Seeder
             'description' => 'Satpam role with specific permissions',
         ]);
 
+        Role::firstOrCreate(['name' => 'kebersihan'], [
+            'name' => 'kebersihan',
+            'display_name' => 'Kebersihan',
+            'description' => 'Petugas kebersihan role with schedule permissions',
+        ]);
+
         $admin = User::updateOrCreate([
             'email' => 'admin@example.com',
         ], [

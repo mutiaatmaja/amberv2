@@ -6,8 +6,7 @@
                 <div>
                     <h3 class="text-xl font-semibold">Cetak QR Titik Absen</h3>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        Generate satu set QR untuk titik Checkin, Checkout, Patroli 1 A/B/C, dan Patroli 2 A/B/C dalam
-                        satu file PDF.
+                        Generate satu set QR gabungan untuk petugas Satpam dan Kebersihan dalam satu file PDF.
                     </p>
                 </div>
 
@@ -17,7 +16,7 @@
                     <button type="submit"
                         class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
                         data-loading-text="Membuat set QR...">
-                        Generate Set QR (PDF 8 Lembar)
+                        Generate Set QR (PDF 10 Lembar)
                     </button>
                 </form>
             </div>

@@ -76,8 +76,14 @@ class AttendanceCycle extends Model
                     return;
                 }
 
+                $isCleaningCycle = $cycle->attendanceLogs()
+                    ->where('point_type', 'LIKE', 'CLEANING_%')
+                    ->exists();
+
+                $checkoutPointType = $isCleaningCycle ? 'CLEANING_CHECKOUT' : 'CHECKOUT';
+
                 $hasCheckout = $cycle->attendanceLogs()
-                    ->where('point_type', 'CHECKOUT')
+                    ->where('point_type', $checkoutPointType)
                     ->where('status', 'accepted')
                     ->exists();
 
@@ -87,8 +93,8 @@ class AttendanceCycle extends Model
                         'user_id' => $cycle->user_id,
                         'qr_set_id' => null,
                         'qr_set_point_id' => null,
-                        'window_group' => 'CHECKOUT',
-                        'point_type' => 'CHECKOUT',
+                        'window_group' => $checkoutPointType,
+                        'point_type' => $checkoutPointType,
                         'token' => 'AUTO-CHECKOUT-'.$cycle->id,
                         'scanned_at' => $cycle->expected_end_at,
                         'status' => 'accepted',

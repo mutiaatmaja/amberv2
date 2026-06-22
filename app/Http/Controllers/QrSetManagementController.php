@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QrSet;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -13,6 +14,36 @@ use function Spatie\LaravelPdf\Support\pdf;
 
 class QrSetManagementController extends Controller
 {
+    /**
+     * @var list<string>
+     */
+    private const SATPAM_QR_POINT_TYPES = [
+        'CHECKIN',
+        'PATROL_1',
+        'STANDBY_1',
+        'PATROL_2',
+        'STANDBY_2',
+        'CHECKOUT',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const CLEANING_QR_POINT_TYPES = [
+        'CLEANING_CHECKIN',
+        'CLEANING_BREAK_IN',
+        'CLEANING_BREAK_OUT',
+        'CLEANING_CHECKOUT',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const PRINTABLE_QR_POINT_TYPES = [
+        ...self::SATPAM_QR_POINT_TYPES,
+        ...self::CLEANING_QR_POINT_TYPES,
+    ];
+
     public function index(): View
     {
         return view('qr-sets.index', [
@@ -33,10 +64,10 @@ class QrSetManagementController extends Controller
                 'token_prefix' => Str::upper(Str::random(40)),
                 'is_active' => ! $hasActiveSet,
                 'activated_at' => $hasActiveSet ? null : now(),
-                'generated_by' => auth()->id(),
+                'generated_by' => Auth::id(),
             ]);
 
-            foreach (QrSet::POINT_TYPES as $pointType) {
+            foreach (self::PRINTABLE_QR_POINT_TYPES as $pointType) {
                 $qrSet->points()->create([
                     'point_type' => $pointType,
                     'token' => Str::upper(Str::random(48)),
@@ -48,7 +79,7 @@ class QrSetManagementController extends Controller
             ->route('qr-sets.index')
             ->with('toast', [
                 'type' => 'success',
-                'message' => 'Satu set QR berhasil dibuat (8 titik).',
+                'message' => 'Satu set QR berhasil dibuat (10 titik: Satpam + Kebersihan).',
             ]);
     }
 
@@ -88,7 +119,7 @@ class QrSetManagementController extends Controller
         }
 
         $points = $qrSet->points
-            ->sortBy(fn ($point) => array_search($point->point_type, QrSet::POINT_TYPES, true))
+            ->sortBy(fn ($point) => array_search($point->point_type, self::PRINTABLE_QR_POINT_TYPES, true))
             ->map(function ($point) {
                 $scanUrl = $this->buildScanUrl($point->token, $point->point_type);
 
@@ -131,6 +162,10 @@ class QrSetManagementController extends Controller
     {
         $baseUrl = rtrim((string) (config('app.url') ?: url('/')), '/');
 
+        if (str_starts_with($pointType, 'CLEANING_')) {
+            return $baseUrl.'/absen-kebersihan/'.$token.'/'.$pointType;
+        }
+
         return $baseUrl.'/absen/'.$token.'/'.$pointType;
     }
 
@@ -143,6 +178,10 @@ class QrSetManagementController extends Controller
             'STANDBY_1' => 'Standby 1',
             'PATROL_2' => 'Patroli 2',
             'STANDBY_2' => 'Standby 2',
+            'CLEANING_CHECKIN' => 'Kebersihan - Checkin',
+            'CLEANING_BREAK_IN' => 'Kebersihan - Istirahat IN',
+            'CLEANING_BREAK_OUT' => 'Kebersihan - Istirahat OUT',
+            'CLEANING_CHECKOUT' => 'Kebersihan - Checkout',
             default => $pointType,
         };
     }

@@ -130,6 +130,20 @@
                     </a>
                 @endrole
 
+                @role('kebersihan')
+                    <a href="{{ route('cleaning-scan-qr') }}" @click="handleNavClick()"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('cleaning-scan-qr') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
+                        <span
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 {{ request()->routeIs('cleaning-scan-qr') ? 'text-white' : 'bg-slate-100 text-emerald-700 dark:bg-slate-800 dark:text-emerald-300' }}">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M4 3a1 1 0 0 0-1 1v3a1 1 0 1 0 2 0V5h2a1 1 0 1 0 0-2H4Zm9 0a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1h-3ZM4 13a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3a1 1 0 1 0 0-2H5v-1a1 1 0 0 0-1-1Zm12 0a1 1 0 0 0-1 1v1h-2a1 1 0 1 0 0 2h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1ZM7 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H7Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H7Z" />
+                            </svg>
+                        </span>
+                        Scan QR Kebersihan
+                    </a>
+                @endrole
+
                 @role('admin|supervisor')
                     <a href="{{ route('users.index') }}" @click="handleNavClick()"
                         class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('users.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
@@ -152,7 +166,19 @@
                                     d="M5.75 3A2.75 2.75 0 0 0 3 5.75v8.5A2.75 2.75 0 0 0 5.75 17h8.5A2.75 2.75 0 0 0 17 14.25v-8.5A2.75 2.75 0 0 0 14.25 3h-8.5ZM6 7.25a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 6 7.25Zm0 3.5a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5A.75.75 0 0 1 6 10.75Zm0 3.5a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1-.75-.75Z" />
                             </svg>
                         </span>
-                        Jadwal
+                        Jadwal Satpam
+                    </a>
+
+                    <a href="{{ route('cleaning-schedules.index') }}" @click="handleNavClick()"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('cleaning-schedules.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
+                        <span
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 {{ request()->routeIs('cleaning-schedules.*') ? 'text-white' : 'bg-slate-100 text-emerald-700 dark:bg-slate-800 dark:text-emerald-300' }}">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M5.75 3A2.75 2.75 0 0 0 3 5.75v8.5A2.75 2.75 0 0 0 5.75 17h8.5A2.75 2.75 0 0 0 17 14.25v-8.5A2.75 2.75 0 0 0 14.25 3h-8.5ZM6 7.25a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 6 7.25Zm0 3.5a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5A.75.75 0 0 1 6 10.75Zm0 3.5a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1-.75-.75Z" />
+                            </svg>
+                        </span>
+                        Jadwal Kebersihan
                     </a>
 
                     <a href="{{ route('qr-sets.index') }}" @click="handleNavClick()"
@@ -179,6 +205,18 @@
                         CETAK REKAP
                     </a>
 
+                    <a href="{{ route('cleaning-attendance-reports.index') }}" @click="handleNavClick()"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('cleaning-attendance-reports.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
+                        <span
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 {{ request()->routeIs('cleaning-attendance-reports.*') ? 'text-white' : 'bg-slate-100 text-emerald-700 dark:bg-slate-800 dark:text-emerald-300' }}">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M5 3.5A1.5 1.5 0 0 1 6.5 2h6.586A1.5 1.5 0 0 1 14.5 2.44l2.56 2.56A1.5 1.5 0 0 1 17.5 5.5v11A1.5 1.5 0 0 1 16 18H6.5A1.5 1.5 0 0 1 5 16.5v-13Zm2.5 2A.5.5 0 0 0 7 6v1a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 13 7V6a.5.5 0 0 0-.5-.5h-5Zm0 4A.5.5 0 0 0 7 10v1a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 13 11v-1a.5.5 0 0 0-.5-.5h-5Zm0 4A.5.5 0 0 0 7 14v1a.5.5 0 0 0 .5.5h3A.5.5 0 0 0 11 15v-1a.5.5 0 0 0-.5-.5h-3Z" />
+                            </svg>
+                        </span>
+                        CETAK REKAP KEBERSIHAN
+                    </a>
+
                     <a href="{{ route('attendance-logs.index') }}" @click="handleNavClick()"
                         class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('attendance-logs.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
                         <span
@@ -190,6 +228,19 @@
                             </svg>
                         </span>
                         Kelola Absensi
+                    </a>
+
+                    <a href="{{ route('cleaning-attendance-logs.index') }}" @click="handleNavClick()"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition {{ request()->routeIs('cleaning-attendance-logs.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white' }}">
+                        <span
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 {{ request()->routeIs('cleaning-attendance-logs.*') ? 'text-white' : 'bg-slate-100 text-emerald-700 dark:bg-slate-800 dark:text-emerald-300' }}">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M6 2a1 1 0 0 0-1 1v1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1V3a1 1 0 1 0-2 0v1H7V3a1 1 0 0 0-1-1Zm0 5a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H6Zm0 4a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H6Zm0 4a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        Kelola Absensi Kebersihan
                     </a>
 
                     <a href="{{ route('settings.edit') }}" @click="handleNavClick()"
