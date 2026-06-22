@@ -14,8 +14,7 @@
                         Pantau proses absen hari ini, lihat rekap harian dan bulanan, lalu ubah password langsung dari
                         dashboard kebersihan.
                     @else
-                        Autentikasi berhasil. Dari halaman ini nanti panel absensi, patroli, monitoring, dan laporan
-                        bisa dikembangkan tanpa mengubah alur login/logout yang sudah ada.
+                        Autentikasi berhasil.
                     @endif
                 </p>
 
@@ -313,21 +312,17 @@
                 <div class="mt-4 grid gap-4 md:grid-cols-3">
                     <div class="rounded-2xl bg-white p-5 dark:bg-slate-950">
                         <h4 class="text-base font-semibold">Panel Admin</h4>
-                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Tambahkan statistik
-                            absensi,
-                            patroli, dan monitoring realtime pada area utama dashboard.</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Kalo ada mao buat menu
+                            baru.</p>
                     </div>
                     <div class="rounded-2xl bg-white p-5 dark:bg-slate-950">
                         <h4 class="text-base font-semibold">Manajemen Role</h4>
-                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Akses sidebar dapat
-                            dibedakan
-                            per role ketika modul admin, supervisor, dan satpam mulai dibuat.</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Perab Aktif</p>
                     </div>
                     <div class="rounded-2xl bg-white p-5 dark:bg-slate-950">
                         <h4 class="text-base font-semibold">PWA & Scanner</h4>
-                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">Shell ini siap dijadikan
-                            basis
-                            untuk halaman scan QR dan dashboard satpam mobile-first.</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">area yang akan ditambah
+                        </p>
                     </div>
                 </div>
             </section>
