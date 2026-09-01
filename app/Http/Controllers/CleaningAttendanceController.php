@@ -528,6 +528,14 @@ class CleaningAttendanceController extends Controller
         $nextPointType = $sequence[$position + 1] ?? 'CLEANING_CHECKOUT';
         $nextStart = $this->scheduledAtForPointType($cycle, $schedule, $nextPointType);
 
+        if ($nextStart && $nextStart->lte($start)) {
+            $nextStart = $nextStart->copy()->addDay();
+
+            while ($nextStart->lte($start)) {
+                $nextStart->addDay();
+            }
+        }
+
         $end = $nextStart ? $nextStart->copy()->subSecond() : $cycle->expected_end_at;
 
         return [

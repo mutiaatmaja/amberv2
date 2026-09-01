@@ -71,6 +71,26 @@ class CleaningAttendanceScanTest extends TestCase
         ];
     }
 
+    private function createActiveBreakInPoint(): array
+    {
+        $qrSet = QrSet::query()->create([
+            'code' => 'QR-CLEANING-BREAK-IN',
+            'token_prefix' => 'TOKENPREFIXCLEANINGBREAKIN',
+            'is_active' => true,
+            'activated_at' => now(),
+        ]);
+
+        $point = $qrSet->points()->create([
+            'point_type' => 'CLEANING_BREAK_IN',
+            'token' => 'CLEANINGBREAKINTOKEN1234567890ABCDEF1234567890ABCD',
+        ]);
+
+        return [
+            'set' => $qrSet,
+            'point' => $point,
+        ];
+    }
+
     public function test_cleaning_staff_can_open_scan_page(): void
     {
         $users = $this->seedUsersWithRoles();
@@ -115,6 +135,43 @@ class CleaningAttendanceScanTest extends TestCase
             'status' => 'accepted',
             'latitude' => -6.2012001,
             'longitude' => 106.8163012,
+        ]);
+    }
+
+    public function test_cleaning_break_in_is_accepted_while_still_in_the_same_session(): void
+    {
+        $users = $this->seedUsersWithRoles();
+        $checkinPoint = $this->createActiveCheckinPoint();
+        $breakInPoint = $this->createActiveBreakInPoint();
+
+        $this->actingAs($users['cleaning'])->post(route('cleaning-attendance.store', [
+            'token' => $checkinPoint['point']->token,
+            'pointType' => 'CLEANING_CHECKIN',
+        ]), [
+            'latitude' => -6.2012001,
+            'longitude' => 106.8163012,
+        ]);
+
+        $this->travelTo('2026-09-01 12:10:00');
+
+        $response = $this->actingAs($users['cleaning'])->post(route('cleaning-attendance.store', [
+            'token' => $breakInPoint['point']->token,
+            'pointType' => 'CLEANING_BREAK_IN',
+        ]), [
+            'latitude' => -6.2012001,
+            'longitude' => 106.8163012,
+        ]);
+
+        $response->assertRedirect(route('cleaning-attendance.scan', [
+            'token' => $breakInPoint['point']->token,
+            'pointType' => 'CLEANING_BREAK_IN',
+        ]));
+        $response->assertSessionHas('toast.type', 'success');
+
+        $this->assertDatabaseHas('attendance_logs', [
+            'user_id' => $users['cleaning']->id,
+            'point_type' => 'CLEANING_BREAK_IN',
+            'status' => 'accepted',
         ]);
     }
 
